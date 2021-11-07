@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+
+<html>
+   <head>
+      
+      <script type = "text/javascript">
+            var output;
+            var input;
+            var websocket;
+            var WS_URL = "ws://127.0.0.1:8080";
+
+            function init()
+            {
+                output = document.getElementById("output");
+                input = document.getElementById("input");
+                testWebSocket();
+            }
+            function testWebSocket()
+            {
+                websocket = new WebSocket(WS_URL);
+                websocket.onopen = function(evt) { onOpen(evt) };
+                websocket.onclose = function(evt) { onClose(evt) };
+                websocket.onmessage = function(evt) { onMessage(evt) };
+                websocket.onerror = function(evt) { onError(evt) };
+            }
+            function onOpen(evt)
+            {
+                writeOnScreen("CONNECTED");
+            }
+            function onClose(evt)
+            {
+                writeOnScreen("DISCONNECTED");
+            }
+            function onMessage(evt)
+            {
+                writeOnScreen('MESSAGE: ' + evt.data);
+            }
+            function onError(evt)
+            {
+                writeOnScreen('ERROR: ' + evt.data);
+            }
+
+            function send()
+            {
+                websocket.send(input.value);
+                input.value = "";
+            }
+            function writeOnScreen(message)
+            {
+                var pre = document.createElement("p");
+                pre.style.wordWrap = "break-word";
+                pre.innerHTML = message;
+                output.appendChild(pre);
+            }
+
+            window.onload = init;
+      </script>
+		
+   </head>
+   
+   <body>
+    <div id="output"></div>
+    <input type="text" id="input"><br><br>
+    <button onclick="send()">Send</button>
+   </body>
+
+</html>
